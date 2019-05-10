@@ -26,13 +26,52 @@ def print_data(data):
     for entry in data:
         print(entry)
         pprint.pprint(entry)
+        
+def sortVal(val): 
+    return val[1]
 
 
 def get_most_noisy_city_and_borough(data):
     """ fill in the Nones for the dictionary below using the bar party data """
     noisiest_city_and_borough = {'city': None, 'borough': None, 'num_city_calls': None, 'num_borough_calls': None}
 
-    # write code here to find the noisiest city and borough and their respective metrics
+    boroughs = set([data[x]['borough'] for x in range(1, len(data))])
+    cities = set([data[x]['city'] for x in range(1, len(data))])
+    
+    borVal = [0] * len(boroughs)
+    
+    citVal = [0] * len(cities)
+    
+    for rec in data:
+        for idx, val in enumerate(boroughs):
+            if rec['borough'] == val:
+                borVal[idx] = borVal[idx] + int(rec['num_calls'])
+                break
+            
+    borValSorted = list(zip(boroughs, borVal))
+    
+    borValSorted.sort(key = sortVal)
+    
+    #print(borValSorted[-1])
+            
+    for rec in data:
+        for idx, val in enumerate(cities):
+            if rec['city'] == val:
+                citVal[idx] = citVal[idx] + int(rec['num_calls'])
+                break
+    
+    citValSorted = list(zip(cities, citVal))
+    
+    citValSorted.sort(key = sortVal)
+    
+    #print(citValSorted[-1])
+    
+    noisiest_city_and_borough['city'] = citValSorted[-1][0]
+    noisiest_city_and_borough['borough'] = borValSorted[-1][0]
+    noisiest_city_and_borough['num_city_calls'] = citValSorted[-1][1]
+    noisiest_city_and_borough['num_borough_calls'] = borValSorted[-1][1]
+            
+    
 
     return noisiest_city_and_borough
 
@@ -42,8 +81,42 @@ def get_quietest_city_and_borough(data):
 
     quietest_city_and_borough = {'city': None, 'borough': None, 'num_city_calls': None, 'num_borough_calls': None}
 
-    # write code here to find the quietest city and borough and their respective metrics
-
+    boroughs = set([data[x]['borough'] for x in range(1, len(data))])
+    cities = set([data[x]['city'] for x in range(1, len(data))])
+    
+    borVal = [0] * len(boroughs)
+    
+    citVal = [0] * len(cities)
+    
+    for rec in data:
+        for idx, val in enumerate(boroughs):
+            if rec['borough'] == val:
+                borVal[idx] = borVal[idx] + int(rec['num_calls'])
+                break
+            
+    borValSorted = list(zip(boroughs, borVal))
+    
+    borValSorted.sort(key = sortVal)
+    
+    #print(borValSorted[0])
+            
+    for rec in data:
+        for idx, val in enumerate(cities):
+            if rec['city'] == val:
+                citVal[idx] = citVal[idx] + int(rec['num_calls'])
+                break
+    
+    citValSorted = list(zip(cities, citVal))
+    
+    citValSorted.sort(key = sortVal)
+    
+    #print(citValSorted[0])
+    
+    quietest_city_and_borough['city'] = citValSorted[0][0]
+    quietest_city_and_borough['borough'] = borValSorted[0][0]
+    quietest_city_and_borough['num_city_calls'] = citValSorted[0][1]
+    quietest_city_and_borough['num_borough_calls'] = borValSorted[0][1]
+    
     return quietest_city_and_borough
 
 
@@ -51,7 +124,8 @@ if __name__ == '__main__':
     bar_data = get_bar_party_data()
 
     # uncomment the line below to see what the data looks like
-    # print_data(bar_data)
+    #print_data(bar_data)
+    
 
     noisy_metrics = get_most_noisy_city_and_borough(bar_data)
 
